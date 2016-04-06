@@ -43,10 +43,9 @@ products_hash['items'].each do |toy|
   num_purchases = toy['purchases'].length
   puts "Total Purchase: #{num_purchases}"
 
-  # Calculate and print the total amount of sales
-  total_sales = 0
-  toy['purchases'].each do |purchase|
-    total_sales += purchase['price']
+  # Calculate and print the total amount of sales with inject
+  total_sales = toy['purchases'].inject(0) do |sum, purchase|
+    sum + purchase['price'].to_f
   end
   puts "Total Sales: $#{total_sales}"
 
@@ -71,27 +70,32 @@ puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
 puts
 
 # Generate unique brand array
-brands = []
-products_hash['items'].each { |toy| brands.push toy['brand'] }
-brands = brands.uniq
+brands = products_hash['items'].map { |item| item['brand'] }.uniq
 
 # For each brand in the data set:
 brands.each do |brand|
   # Print the name of the brand
-  puts brand
+  puts brand.upcase
   puts '*' * max_title_length
 
   # Count and print the number of the brand's toys we stock
-  cnt_brand = 0
-  products_hash['items'].each { |toy| cnt_brand += 1 if toy['brand'] == brand }
-
-  puts "Numbers of Products: #{cnt_brand}"
+  total_stock = 0
+  products_hash['items'].each do |toy|
+    if toy['brand'] == brand
+      total_stock += toy['stock'].to_i
+    end
+  end
+  puts "Numbers of Toys in Stock: #{total_stock}"
 
   # Calculate and print the average price of the brand's toys
   total_price = 0
   products_hash['items'].each do |toy|
     total_price += toy['full-price'].to_f if toy['brand'] == brand
   end
+
+  cnt_brand = 0
+  products_hash['items'].each { |toy| cnt_brand += 1 if toy['brand'] == brand }
+
   avg_price = (total_price / cnt_brand).round(2)
   puts "Average Product Price: $#{avg_price}"
 
