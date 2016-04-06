@@ -6,7 +6,8 @@ file = File.read(path)
 products_hash = JSON.parse(file)
 
 # Print today's date
-puts Date.today.strftime('%A, %B %d, %Y')
+today = Date.today.strftime('%A, %B %d, %Y')
+puts "Today's Date: #{today}"
 
 puts "                     _            _       "
 puts "                    | |          | |      "
